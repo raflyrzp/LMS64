@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('id_materi')->constrained()->onDelete('cascade');
             $table->string('nama_file');
             $table->string('path_file');
+            $table->enum('tipe_file', ['dokumen', 'gambar', 'video']);
             $table->timestamps();
         });
     }
