@@ -47,6 +47,11 @@ class User extends Authenticatable
 
     public function hasRole($role)
     {
-        $this->role = $role;
+        return $this->role == $role;
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 }

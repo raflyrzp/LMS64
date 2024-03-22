@@ -12,11 +12,11 @@ class Pengumpulan extends Model
 
     public function tugas()
     {
-        $this->belongsTo(Tugas::class, 'id_tugas');
+        return $this->belongsTo(Tugas::class, 'id_tugas');
     }
 
     public function user()
     {
-        $this->belongsTo(User::class, 'id_siswa');
+        return $this->belongsTo(User::class, 'id_siswa');
     }
 }

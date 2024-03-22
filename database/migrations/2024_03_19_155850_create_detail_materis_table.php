@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detail_materis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_materi')->constrained()->onDelete('cascade');
+            $table->foreignId('id_materi')->constrained('materis')->onDelete('cascade');
             $table->string('nama_file');
             $table->string('path_file');
             $table->enum('tipe_file', ['dokumen', 'gambar', 'video']);

@@ -2,66 +2,105 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Kelas;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreKelasRequest;
 use App\Http\Requests\UpdateKelasRequest;
 
 class KelasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $kelas = Kelas::all();
+        return view('siswa.index', compact('kelas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function joinKelas(Request $request)
     {
-        //
+        $request->validate([
+            'kode_kelas' => 'required|string',
+        ]);
+
+        $kelas = Kelas::where('kode_kelas', $request->kode_kelas)->first();
+
+        if ($kelas) {
+            $user = User::findOrFail(auth()->id());
+            $user->id_kelas = $kelas->id;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Berhasil bergabung ke kelas.');
+        } else {
+            return redirect()->back()->with('error', 'Kode kelas tidak valid.');
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreKelasRequest $request)
+    public function keluarKelas($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $user->id_kelas = null;
+        $user->save();
+
+        if (auth()->user()->role === 'siswa') {
+            return redirect()->route('kelas.user')->with('success', 'Anda telah keluar dari kelas.');
+        } else {
+            return redirect()->route('kelas.user')->with('success', 'Berhasil mengeluarkan seorang siswa dari kelas.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Kelas $kelas)
+    public function buatKelas(Request $request)
     {
-        //
+        $request->validate([
+            'nama_kelas' => 'required|string',
+            'deskripsi' => 'required|string',
+            'angkatan' => 'required'
+        ]);
+
+        $namaKelasTanpaSpasi = str_replace(' ', '', $request->nama_kelas);
+        $kodeKelas = $namaKelasTanpaSpasi . $request->angkatan . Str::random(5);
+
+        Kelas::create([
+            'nama_kelas' => $request->nama_kelas,
+            'angkatan' => $request->angkatan,
+            'kode_kelas' => $kodeKelas,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil ditambahkan.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Kelas $kelas)
+    public function editKelas(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nama_kelas' => 'required|string',
+            'deskripsi' => 'required|string',
+            'angkatan' => 'required',
+        ]);
+
+        $kelas = Kelas::findOrFail($id);
+
+        $kodeKelas = $request->nama_kelas . '_' . $request->angkatan;
+
+        $kelas->update([
+            'nama_kelas' => $request->nama_kelas,
+            'angkatan' => $request->angkatan,
+            'kode_kelas' => $kodeKelas,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateKelasRequest $request, Kelas $kelas)
+    public function hapusKelas($id)
     {
-        //
-    }
+        $kelas = Kelas::findOrFail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Kelas $kelas)
-    {
-        //
+        $kelas->delete();
+
+        return redirect()->route('kelas.index')->with('success', 'Kelas berhasil dihapus.');
     }
 }

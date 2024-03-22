@@ -12,11 +12,11 @@ class Pelajaran extends Model
 
     public function kelas()
     {
-        $this->belongsTo(Kelas::class, 'id_kelas');
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 
     public function user()
     {
-        $this->belongsTo(User::class, 'id_guru');
+        return $this->belongsTo(User::class, 'id_guru');
     }
 }

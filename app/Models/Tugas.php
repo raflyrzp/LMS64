@@ -12,6 +12,6 @@ class Tugas extends Model
 
     public function pelajaran()
     {
-        $this->belongsTo(Pelajaran::class, 'id_pelajaran');
+        return $this->belongsTo(Pelajaran::class, 'id_pelajaran');
     }
 }

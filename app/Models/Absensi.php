@@ -12,6 +12,6 @@ class Absensi extends Model
 
     public function kelas()
     {
-        $this->belongsTo(Kelas::class, 'id_kelas');
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 }

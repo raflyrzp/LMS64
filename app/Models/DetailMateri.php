@@ -12,6 +12,6 @@ class DetailMateri extends Model
 
     public function materi()
     {
-        $this->belongsTo(Materi::class, 'id_materi');
+        return $this->belongsTo(Materi::class, 'id_materi');
     }
 }

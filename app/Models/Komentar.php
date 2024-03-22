@@ -12,11 +12,11 @@ class Komentar extends Model
 
     public function pelajaran()
     {
-        $this->belongsTo(Pelajaran::class, 'id_pelajaran');
+        return $this->belongsTo(Pelajaran::class, 'id_pelajaran');
     }
 
     public function user()
     {
-        $this->belongsTo(User::class, 'id_pengirim');
+        return $this->belongsTo(User::class, 'id_pengirim');
     }
 }

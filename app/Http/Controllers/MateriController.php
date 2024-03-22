@@ -69,4 +69,50 @@ class MateriController extends Controller
 
         return redirect()->back()->with('success', 'Materi berhasil diunggah.');
     }
+
+    public function editMateri(Request $request, $id)
+    {
+        $request->validate([
+            'judul' => 'required|string',
+            'deskripsi' => 'required|string',
+            'file' => 'nullable|mimes:pdf,doc,docx,txt,mp4,jpg,jpeg,png,xls,xlsx',
+            // 'video' => 'nullable|mimetypes:video/mp4',
+        ]);
+
+        $materi = Materi::findOrFail($id);
+
+        $materi->judul = $request->judul;
+        $materi->deskripsi = $request->deskripsi;
+        $materi->id_pelajaran = $request->id_pelajaran;
+        $materi->save();
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $namaFile = $file->getClientOriginalName();
+                $pathFile = $file->store('files');
+
+                $ekstensi = $file->getClientOriginalExtension();
+                $ekstensiDokumen = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
+                $ekstensiGambar = ['jpg', 'jpeg', 'png'];
+                $ekstensiVideo = ['mp4'];
+
+                if (in_array($ekstensi, $ekstensiDokumen)) {
+                    $tipeFile = 'dokumen';
+                } elseif (in_array($ekstensi, $ekstensiGambar)) {
+                    $tipeFile = 'gambar';
+                } elseif (in_array($ekstensi, $ekstensiVideo)) {
+                    $tipeFile = 'video';
+                } else {
+                    return redirect()->back()->with('error', 'Tipe file tidak didukung');
+                }
+
+                $detailMateri = DetailMateri::updateOrCreate(
+                    ['id_materi' => $materi->id, 'nama_file' => $namaFile],
+                    ['path_file' => $pathFile, 'tipe_file' => $tipeFile]
+                );
+            }
+        }
+
+        return redirect()->back()->with('success', 'Materi berhasil diperbarui.');
+    }
 }
