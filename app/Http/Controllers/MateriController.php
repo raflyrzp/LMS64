@@ -8,15 +8,52 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMateriRequest;
 use App\Http\Requests\UpdateMateriRequest;
+use Yaza\LaravelGoogleDriveStorage\Gdrive;
 
 class MateriController extends Controller
 {
+    // public function uploadMateri(Request $request)
+    // {
+    //     $request->validate([
+    //         'judul' => 'required|string',
+    //         'deskripsi' => 'required|string',
+    //         'files' => 'required',
+    //         'files.*' => 'mimes:pdf,doc,docx,txt,mp4,jpg,jpeg,png,xls,xlsx',
+    //     ]);
+
+    //     $materi = Materi::create([
+    //         'judul' => $request->judul,
+    //         'deskripsi' => $request->deskripsi,
+    //         'id_pelajaran' => $request->id_pelajaran,
+    //     ]);
+
+    //     foreach ($request->file('files') as $file) {
+    //         $folderPath = 'your-folder/';
+    //         $fileName = $file->getClientOriginalName();
+    //         $filePath = $folderPath . $fileName;
+
+    //         $pathFile = Gdrive::put($filePath, file_get_contents($file->getRealPath()));
+
+    //         $ekstensi = $file->getClientOriginalExtension();
+    //         $tipeFile = $this->getFileType($ekstensi);
+
+    //         DetailMateri::create([
+    //             'id_materi' => $materi->id,
+    //             'nama_file' => $fileName,
+    //             'path_file' => $pathFile,
+    //             'tipe_file' => $tipeFile,
+    //         ]);
+    //     }
+
+    //     return redirect()->back()->with('success', 'Materi berhasil diunggah ke Google Drive.');
+    // }
+
     public function uploadMateri(Request $request)
     {
         $request->validate([
             'judul' => 'required|string',
             'deskripsi' => 'required|string',
-            'file' => 'required|mimes:pdf,doc,docx,txt,mp4,jpg,jpeg,png,xls,xlsx',
+            // 'file' => 'required|mimes:pdf,doc,docx,txt,mp4,jpg,jpeg,png,xls,xlsx',
             // 'video' => 'nullable|mimetypes:video/mp4',
         ]);
 
@@ -28,22 +65,10 @@ class MateriController extends Controller
 
         foreach ($request->file('files') as $file) {
             $namaFile = $file->getClientOriginalName();
-            $pathFile = $file->store('files');
-
+            $pathFile = $file->store('materi');
             $ekstensi = $file->getClientOriginalExtension();
-            $ekstensiDokumen = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
-            $ekstensiGambar = ['jpg', 'jpeg', 'png'];
-            $ekstensiVideo = ['mp4'];
+            $tipeFile = $this->getFileType($ekstensi);
 
-            if (in_array($ekstensi, $ekstensiDokumen)) {
-                $tipeFile = 'dokumen';
-            } elseif (in_array($ekstensi, $ekstensiGambar)) {
-                $tipeFile = 'gambar';
-            } elseif (in_array($ekstensi, $ekstensiVideo)) {
-                $tipeFile = 'video';
-            } else {
-                return redirect()->back()->with('error', 'Tipe file tidak didukung');
-            }
 
             DetailMateri::create([
                 'id_materi' => $materi->id,
@@ -53,21 +78,24 @@ class MateriController extends Controller
             ]);
         }
 
-        // if ($request->hasFile('video')) {
-        //     foreach ($request->file('videos') as $video) {
-        //         $namaVideo = $video->getClientOriginalName();
-        //         $pathVideo = $video->store('videos');
-
-
-        //         DetailMateri::create([
-        //             'id_materi' => $materi->id,
-        //             'nama_video' => $namaVideo,
-        //             'path_video' => $pathVideo,
-        //         ]);
-        //     }
-        // }
-
         return redirect()->back()->with('success', 'Materi berhasil diunggah.');
+    }
+
+    private function getFileType($extension)
+    {
+        $ekstensiDokumen = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'pptx'];
+        $ekstensiGambar = ['jpg', 'jpeg', 'png'];
+        $ekstensiVideo = ['mp4'];
+
+        if (in_array($extension, $ekstensiDokumen)) {
+            return 'dokumen';
+        } elseif (in_array($extension, $ekstensiGambar)) {
+            return 'gambar';
+        } elseif (in_array($extension, $ekstensiVideo)) {
+            return 'video';
+        } else {
+            return 'lainnya';
+        }
     }
 
     public function editMateri(Request $request, $id)
@@ -75,7 +103,7 @@ class MateriController extends Controller
         $request->validate([
             'judul' => 'required|string',
             'deskripsi' => 'required|string',
-            'file' => 'nullable|mimes:pdf,doc,docx,txt,mp4,jpg,jpeg,png,xls,xlsx',
+            // 'file' => 'nullable|mimes:pdf,doc,docx,txt,mp4,jpg,jpeg,png,xls,xlsx',
             // 'video' => 'nullable|mimetypes:video/mp4',
         ]);
 
@@ -92,7 +120,7 @@ class MateriController extends Controller
                 $pathFile = $file->store('files');
 
                 $ekstensi = $file->getClientOriginalExtension();
-                $ekstensiDokumen = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
+                $ekstensiDokumen = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'pptx'];
                 $ekstensiGambar = ['jpg', 'jpeg', 'png'];
                 $ekstensiVideo = ['mp4'];
 

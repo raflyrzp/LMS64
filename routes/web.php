@@ -28,6 +28,10 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'userAkses:admin'])->group(function () {
 });
 Route::middleware(['auth', 'userAkses:guru'])->group(function () {
+    Route::get('/guru', [DashboardController::class, 'guruIndex'])->name('guru.index');
+    Route::post('/guru/pelajaran', [PelajaranController::class, 'store'])->name('pelajaran.store');
+    Route::put('/guru/pelajaran/{id}', [PelajaranController::class, 'update'])->name('pelajaran.update');
+    Route::delete('/guru/pelajaran/{id}', [PelajaranController::class, 'destroy'])->name('pelajaran.destroy');
 });
 Route::middleware(['auth', 'userAkses:siswa'])->group(function () {
     Route::get('/siswa', [DashboardController::class, 'siswaIndex'])->name('siswa.index');

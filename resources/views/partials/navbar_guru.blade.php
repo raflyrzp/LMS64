@@ -44,7 +44,7 @@
                 <div class="container col-6">
                     <ul class="nav page-navigation">
                         <li class="nav-item {{ $title === 'Dashboard' ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('siswa.index') }}">
+                            <a class="nav-link" href="{{ route('guru.index') }}">
                                 <i class="mdi mdi-file-document-box menu-icon"></i>
                                 <span class="menu-title">Pelajaran</span>
                             </a>

@@ -66,7 +66,27 @@
             @endforeach
         </div>
         <div class="col-lg-9">
-            KONTOL
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 class="card-title mb-3 fs-3">Aljabar</h3>
+                            <p class="mb-0 mt-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus
+                                velit ullam numquam exercitationem. Debitis amet laboriosam ullam? Exercitationem obcaecati
+                                itaque voluptatibus voluptate enim facilis sed reprehenderit deleniti expedita quam? Quo ex
+                                eum laborum labore, voluptatibus commodi magni, sunt, dolore modi veritatis nulla maxime
+                                consequatur facere! Expedita quidem sapiente animi! Iste, reiciendis possimus eveniet
+                                distinctio incidunt quidem porro iusto aliquid, doloremque inventore esse eos nobis pariatur
+                                provident! Neque, facere! Adipisci nemo ut minima magni doloribus? Libero velit, eius
+                                perferendis dolores ut eligendi. Illum reiciendis, quod quasi corporis temporibus
+                                consectetur, magnam deleniti ullam, distinctio sit praesentium alias animi fugit cumque
+                                earum facere!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection

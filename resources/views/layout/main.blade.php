@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Kapella Bootstrap Admin Dashboard Template</title>
+    <title>{{ $title }} - LMS64</title>
     <!-- base:css -->
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/base/vendor.bundle.base.css') }}">
@@ -17,12 +17,13 @@
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 
-    <link rel="stylesheet" href="{{ asset('assets/css/pelajaran.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/mycss.css') }}">
 
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/js/datatables-bs4/css/dataTables.bootstrap4.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/js/datatables-responsive/css/responsive.bootstrap4.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/js/datatables-buttons/css/buttons.bootstrap4.min.css') }}" />
+
 </head>
 
 <body>

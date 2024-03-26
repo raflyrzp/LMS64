@@ -6,6 +6,7 @@ use App\Models\Materi;
 use App\Models\Pelajaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StorePelajaranRequest;
 use App\Http\Requests\UpdatePelajaranRequest;
 
@@ -35,9 +36,16 @@ class PelajaranController extends Controller
                 'id_guru' => 'required|exists:users,id',
                 'deskripsi' => 'required|string',
             ]);
+            $foto = $request->file('foto');
+            $foto->storeAs('public/bg_pelajaran', $foto->hashName());
 
-            Pelajaran::create($request->all());
-
+            Pelajaran::create([
+                'mata_pelajaran' => $request->mata_pelajaran,
+                'id_kelas' => $request->id_kelas,
+                'id_guru' => $request->id_guru,
+                'deskripsi' => $request->deskripsi,
+                'foto' => $foto->hashName()
+            ]);
             return redirect()->back()->with('success', 'Pelajaran berhasil dibuat.');
         }
     }
@@ -60,7 +68,7 @@ class PelajaranController extends Controller
             ['mata_pelajaran', $request->mata_pelajaran],
             ['id_kelas', $request->id_kelas],
             ['id_guru', $request->id_guru],
-        ])->exists();
+        ])->whereNotIn('id', [$id])->exists();
 
         if ($existingData) {
             return redirect()->back()->with('error', 'Mata pelajaran sudah ada.');
@@ -71,12 +79,32 @@ class PelajaranController extends Controller
                 'id_guru' => 'required|exists:users,id',
                 'deskripsi' => 'required|string',
             ]);
-
             $pelajaran = Pelajaran::findOrFail($id);
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
+                $foto->storeAs('public/bg_pelajaran', $foto->hashName());
 
-            $pelajaran->update($request->all());
+                if ($pelajaran->foto !== 'default.jpg') {
+                    Storage::delete('public/bg_pelajaran/' . $pelajaran->foto);
+                }
 
-            return redirect()->back()->with('success', 'Pelajaran berhasil dibuat.');
+                $pelajaran->update([
+                    'mata_pelajaran' => $request->mata_pelajaran,
+                    'id_kelas' => $request->id_kelas,
+                    'id_guru' => $request->id_guru,
+                    'deskripsi' => $request->deskripsi,
+                    'foto' => $foto->hashName()
+                ]);
+                return redirect()->back()->with('success', 'Pelajaran berhasil diubah.');
+            } else {
+                $pelajaran->update([
+                    'mata_pelajaran' => $request->mata_pelajaran,
+                    'id_kelas' => $request->id_kelas,
+                    'id_guru' => $request->id_guru,
+                    'deskripsi' => $request->deskripsi,
+                ]);
+                return redirect()->back()->with('success', 'Pelajaran berhasil diubah.');
+            }
         }
     }
 
@@ -84,6 +112,13 @@ class PelajaranController extends Controller
     public function destroy($id)
     {
         $pelajaran = Pelajaran::findOrFail($id);
+
+        $materis = Materi::where('id_pelajaran', $id)->get();
+
+        foreach ($materis as $materi) {
+            $materi->delete();
+        }
+        Storage::delete('public/bg_pelajaran/' . $pelajaran->foto);
         $pelajaran->delete();
 
         return redirect()->back()->with('success', 'Pelajaran berhasil dihapus.');

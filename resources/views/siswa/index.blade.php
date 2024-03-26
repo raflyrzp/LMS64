@@ -20,7 +20,8 @@
                     <li>
                         <a href="{{ route('siswa.pelajaran', [$pelajaran->mata_pelajaran, $pelajaran->id]) }}"
                             class="pelajaran-card">
-                            <img src="{{ asset('assets/images/faces/face10.jpg') }}" class="card__image" alt="" />
+                            <img src="{{ asset('./storage/bg_pelajaran/' . $pelajaran->foto) }}" class="card__image"
+                                alt="" />
                             <div class="card__overlay">
                                 <div class="card__header">
                                     <svg class="card__arc" xmlns="http://www.w3.org/2000/svg">
