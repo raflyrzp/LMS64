@@ -12,12 +12,7 @@ use App\Http\Requests\UpdatePelajaranRequest;
 
 class PelajaranController extends Controller
 {
-    public function index($pelajaran, $id)
-    {
-        $title = 'Materi';
-        $materis = Materi::where('id_pelajaran', $id)->get();
-        return view('siswa.pelajaran', compact('title', 'materis'));
-    }
+
 
     public function store(Request $request)
     {

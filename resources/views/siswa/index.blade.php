@@ -17,8 +17,11 @@
 
             <ul class="cards">
                 @forelse ($pelajarans as $pelajaran)
+                    @php
+                        $materi = App\Models\Materi::where('id_pelajaran', $pelajaran->id)->first();
+                    @endphp
                     <li>
-                        <a href="{{ route('siswa.pelajaran', [$pelajaran->mata_pelajaran, $pelajaran->id]) }}"
+                        <a href="{{ $materi ? route('siswa.materi.show', [$pelajaran->id, $materi->id]) : route('siswa.materi', $pelajaran->id) }}"
                             class="pelajaran-card">
                             <img src="{{ asset('./storage/bg_pelajaran/' . $pelajaran->foto) }}" class="card__image"
                                 alt="" />

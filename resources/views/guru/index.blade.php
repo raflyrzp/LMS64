@@ -1,83 +1,72 @@
-@extends('layout.main')
+@extends('layout.main_admin')
 
 @section('content')
-    <div class="row">
-        <div class="col-sm-6 mb-4 mb-xl-0">
-            <div class="d-lg-flex align-items-center">
-                <div>
-                    <button type="button" class="btn btn-sm btn-primary mb-1" data-bs-toggle="modal"
-                        data-bs-target="#tambahModal"><i class="ti-plus"></i> Tambah</button>
-                </div>
-            </div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Dashboard</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+                <button type="button" class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#tambahModal"><i
+                        class="fas fa-plus"></i> Tambah</button>
+            </div><!-- /.container-fluid -->
         </div>
-    </div>
+        <!-- /.content-header -->
 
-    <div class="row mt-4">
-        <div class="col-lg-12 grid-margin">
-
-            <ul class="cards">
-                @forelse ($pelajarans as $pelajaran)
-                    <li>
-                        <a href="{{ route('siswa.pelajaran', [$pelajaran->mata_pelajaran, $pelajaran->id]) }}"
-                            class="pelajaran-card">
-                            <img src="{{ asset('./storage/bg_pelajaran/' . $pelajaran->foto) }}" class="card__image"
-                                alt="" />
-                            <div class="card__overlay">
-                                <div class="card__header">
-                                    <svg class="card__arc" xmlns="http://www.w3.org/2000/svg">
-                                        <path />
-                                    </svg>
-                                    <img class="card__thumb" src="{{ asset('assets/images/faces/adel.jpg') }}"
-                                        alt="" />
-                                    <div class="card__header-text">
-                                        <h3 class="card__title">{{ $pelajaran->mata_pelajaran }}</h3>
-                                        <span
-                                            class="card__status">{{ $pelajaran->kelas->nama_kelas . ' (' . $pelajaran->kelas->angkatan . ')' }}</span>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Small boxes (Stat box) -->
+                <div class="row">
+                    <div class="col-lg-12 col-12" style="display:flex; gap: 10px;">
+                        @foreach ($pelajarans as $pelajaran)
+                            <div class="card" style="width: 16rem;">
+                                <img src="{{ asset('/storage/bg_pelajaran/' . $pelajaran->foto) }}" class="card-img-top"
+                                    alt="{{ $pelajaran->mata_pelajaran }}" height="200px" style="object-fit: cover">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ $pelajaran->mata_pelajaran }}</h5>
+                                    <h6 class="card-subtitle mb-2 mt-1 text-muted">
+                                        {{ $pelajaran->kelas->nama_kelas . ' (' . $pelajaran->kelas->angkatan . ')' }}</h6>
+                                    <p class="card-text">{{ $pelajaran->deskripsi }}</p>
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                            data-target="#editModal{{ $pelajaran->id }}"><i
+                                                class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                                            data-target="#deleteModal{{ $pelajaran->id }}"><i
+                                                class="fas fa-trash"></i></button>
+                                        <a href="{{ route('guru.materi', $pelajaran->id) }}" class="btn btn-sm btn-info"><i
+                                                class="fas fa-eye"></i></a>
                                     </div>
                                 </div>
-                                <p class="card__description">{{ $pelajaran->deskripsi }}
-                                </p>
                             </div>
-                        </a>
-                        <button type="button" class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal"
-                            data-bs-target="#editModal{{ $pelajaran->id }}"><i class="mdi mdi-grease-pencil"></i></button>
-
-                        <button type="button" class="btn btn-sm btn-danger mt-2" data-bs-toggle="modal"
-                            data-bs-target="#deleteModal{{ $pelajaran->id }}"><i
-                                class="mdi mdi-delete-forever"></i></button>
-                    </li>
-                @empty
-                    <div class="card col-lg-6 col-sm-12">
-                        <div class="wrapper">
-                            <div class="label">Anda belum memasuki kelas, masukkan kode kelas anda pada form di bawah!
-                            </div>
-                            <div class="searchBar">
-                                <form action="{{ route('join.kelas') }}" method="post">
-                                    @csrf
-                                    <input id="searchQueryInput" type="text" name="kode_kelas" placeholder="Kode kelas"
-                                        value="" />
-                                    <button id="searchQuerySubmit" type="submit" name="submit">
-                                        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                                            <path fill="#666666"
-                                                d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
-                @endforelse
-            </ul>
-        </div>
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
 
     <div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="tambahModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="tambahModalLabel">Tambah Produk</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <h4 class="modal-title" id="tambahModalLabel">Tambah Pelajaran</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -110,7 +99,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
                             <i class="bx bx-x d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Tutup</span>
                         </button>
@@ -131,7 +120,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="tambahModalLabel">Edit Pelajaran</h4>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span>&times;</span>
                         </button>
                     </div>
@@ -169,7 +158,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
                                 <i class="bx bx-x d-block d-sm-none"></i>
                                 <span class="d-none d-sm-block">Tutup</span>
                             </button>
@@ -214,7 +203,7 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
                             <i class="bx bx-x d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Batal</span>
                         </button>
